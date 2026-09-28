@@ -52,3 +52,19 @@ export const updateTodo = async (req, res) => {
         res.status(400).json({ message: error.message })
     }
 }
+
+export const deleteTodo = async (req, res) => {
+    try {
+        const { id } = req.params
+        const todo = await Todo.findByIdAndDelete(id)
+
+        if (!todo) {
+            res.status(404).json({ message: 'Todo not found' })
+            return
+        }
+
+        res.status(200).json({ message: 'Todo deleted successfully' })
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+}
