@@ -40,6 +40,7 @@ export const updateTodo = async (req, res) => {
                 title: title.trim(),
                 completed
             },
+            { new: true, runValidators: true }
         )
 
         if (!updatedTodo) {
@@ -48,6 +49,32 @@ export const updateTodo = async (req, res) => {
         }
 
         res.status(200).json(updatedTodo)
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+}
+
+export const completeTodo = async (req, res) => {
+    try {
+        const { completed } = req.body
+
+        if (typeof completed !== 'boolean') {
+            res.status(400).json({ message: 'Completed must be a boolean' })
+            return
+        }
+
+        const todo = await Todo.findByIdAndUpdate(
+            req.params.id,
+            { completed },
+            { new: true, runValidators: true }
+        )
+
+        if (!todo) {
+            res.status(404).json({ message: 'Todo not found' })
+            return
+        }
+
+        res.status(200).json(todo)
     } catch (error) {
         res.status(400).json({ message: error.message })
     }
