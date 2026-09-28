@@ -24,3 +24,31 @@ export const createTodo = async (req, res) => {
         res.status(400).json({ message: error.message })
     }
 }
+
+export const updateTodo = async (req, res) => {
+    try {
+        const { id } = req.params
+        const { title, completed } = req.body
+
+        if (!title || !title.trim()) {
+            res.status(400).json({ message: 'Title is required' })
+            return
+        }
+
+        const updatedTodo = await Todo.findByIdAndUpdate(id,
+            {
+                title: title.trim(),
+                completed
+            },
+        )
+
+        if (!updatedTodo) {
+            res.status(404).json({ message: 'Todo not found' })
+            return
+        }
+
+        res.status(200).json(updatedTodo)
+    } catch (error) {
+        res.status(400).json({ message: error.message })
+    }
+}
