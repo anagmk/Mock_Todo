@@ -45,7 +45,21 @@ function App() {
     allTodos()
   }, [])
 
+  async function deleteTodo(id) {
+    try {
+      const response = await fetch(`http://localhost:3000/api/todos/delete/${id}`, {
+        method: 'DELETE',
+      })
 
+      if (!response.ok) {
+        throw new Error(`Failed to delete todo: ${response.status}`)
+      }
+
+      setTodos(todos.filter((todo) => todo._id !== id))
+    } catch (error) {
+      console.error('Error deleting todo:', error)
+    }
+  }
 
   return (
     <>
